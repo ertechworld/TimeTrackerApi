@@ -25,15 +25,17 @@ namespace TimeTracker.Service.Services
 
         public void Delete(int id)
         {
-            var productInDb = _context.Products.Find(id);
+           Product productInDb = _context.Products.Where(x=>x.Id == id && x.IsDeleted != true).FirstOrDefault();
             if (productInDb != null)
-                _context.Products.Remove(productInDb);
-            _context.SaveChanges();
+            {
+                productInDb.IsDeleted = true;
+                _context.SaveChanges();
+            }
         }
 
         public ProductResponseDto GetProductById(int id)
         {
-            Product product = _context.Products.Find(id);
+            Product product = _context.Products.Where(x=> x.Id == id && x.IsDeleted != true).FirstOrDefault();
             if (product != null)
             {
                 return _mapper.Map<ProductResponseDto>(product);
@@ -43,7 +45,7 @@ namespace TimeTracker.Service.Services
 
         public IEnumerable<ProductResponseDto> GetProducts()
         {
-            return _context.Products.ToList().Select(_mapper.Map<Product, ProductResponseDto>);
+            return _context.Products.Where(x=>x.IsDeleted == false).ToList().Select(_mapper.Map<Product, ProductResponseDto>);
         }
         public void Update(ProductUpdateDto productUpdateDto)
         {
