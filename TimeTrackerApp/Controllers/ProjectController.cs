@@ -7,41 +7,41 @@ namespace TimeTrackerApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProjectController : ControllerBase
     {
-        private readonly IProductService _productService;
-        public ProductController(IProductService productService,IMapper mapper)
+        private readonly IProjectService _projectService;
+        public ProjectController(IProjectService projectService,IMapper mapper)
         {
-            _productService = productService;
+            _projectService = projectService;
         }
         [HttpGet]
         public IActionResult GetAll()
         {
-            var productList = _productService.GetProducts();
+            var productList = _projectService.GetProjects();
             return Ok(productList);
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var products = _productService.GetProductById(id);
-            return Ok(products);
+            var projects = _projectService.GetProjectById(id);
+            return Ok(projects);
         }
         [HttpPost]
-        public IActionResult Save([FromBody]ProductRequestDto productRequestDto)
+        public IActionResult Save([FromBody]ProjectRequestDto projectRequestDto)
         {
-            if (productRequestDto == null)
+            if (projectRequestDto == null)
                 return BadRequest();
             if(!ModelState.IsValid) return BadRequest("Model Invalid !!!");
-            _productService.Add(productRequestDto);
+            _projectService.Add(projectRequestDto);
             return Ok();
         }
         [HttpPut]
-        public IActionResult Update([FromBody]ProductUpdateDto productUpdateDto) 
+        public IActionResult Update([FromBody]ProjectUpdateDto projectUpdateDto) 
         {
-            if(productUpdateDto == null)
+            if(projectUpdateDto == null)
                 return BadRequest();
             if (!ModelState.IsValid) return BadRequest("Model Invalid");
-            _productService.Update(productUpdateDto);
+            _projectService.Update(projectUpdateDto);
             return Ok();
         }
         [HttpDelete("{id}")]
@@ -49,7 +49,7 @@ namespace TimeTrackerApp.Controllers
         {
             if(id == 0)
                 return BadRequest();
-            _productService.Delete(id);
+            _projectService.Delete(id);
             return Ok();
         }
     }

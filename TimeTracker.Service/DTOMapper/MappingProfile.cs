@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using TimeTracker.DTO.Product;
+using TimeTracker.DTO.Task;
 using TimeTracker.Service.Models;
+using Task = TimeTracker.Service.Models.Task;
 
 namespace TimeTracker.Service.DTOMapper
 {
@@ -8,9 +10,11 @@ namespace TimeTracker.Service.DTOMapper
     {
         public MappingProfile()
         {
-            CreateMap<ProductRequestDto,Product>();
-            CreateMap<ProductUpdateDto, Product>();
-            CreateMap<Product, ProductResponseDto>();
+            CreateMap<ProjectRequestDto,Project>();
+            CreateMap<ProjectUpdateDto, Project>();
+            CreateMap<Project, ProjectResponseDto>();
+            CreateMap<Task, TaskRequestDto>().ReverseMap();
+            CreateMap<Task, TaskResponseDto>().ReverseMap();
 
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace TimeTracker.DTO.Product
 {
-    public class ProductResponseDto
+    public class ProjectResponseDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;

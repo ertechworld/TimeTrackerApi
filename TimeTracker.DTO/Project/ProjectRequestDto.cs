@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TimeTracker.DTO.Product
 {
-    public class ProductRequestDto: ProductResponseDto
+    public class ProjectRequestDto: ProjectResponseDto
     {
         
     }

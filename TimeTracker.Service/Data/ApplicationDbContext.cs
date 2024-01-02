@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TimeTracker.Service.Models;
+using Task = TimeTracker.Service.Models.Task;
+
+
 
 namespace TimeTracker.Service.Data
 {
@@ -9,6 +12,7 @@ namespace TimeTracker.Service.Data
         {
             
         }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Task> Tasks { get; set; }
     }
 }
