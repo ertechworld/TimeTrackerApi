@@ -14,20 +14,23 @@ namespace TimeTrackerApp.Controllers
         {
             _projectService = projectService;
         }
-        [HttpGet]
-        public IActionResult GetAll()
+        [HttpGet("GetAll")]
+        public IActionResult GetAllProducts()
         {
             var productList = _projectService.GetProjects();
             return Ok(productList);
         }
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        [HttpGet("GetById/{id}")]
+        public IActionResult GetProduct(int id)
         {
+            if (id == 0) return BadRequest(ModelState);
+            var products = _productService.GetProductById(id);
+            return Ok(products);
             var projects = _projectService.GetProjectById(id);
             return Ok(projects);
         }
-        [HttpPost]
-        public IActionResult Save([FromBody]ProjectRequestDto projectRequestDto)
+        [HttpPost("Add")]
+        public IActionResult AddProduct([FromBody]ProductRequestDto productRequestDto)
         {
             if (projectRequestDto == null)
                 return BadRequest();
@@ -35,8 +38,8 @@ namespace TimeTrackerApp.Controllers
             _projectService.Add(projectRequestDto);
             return Ok();
         }
-        [HttpPut]
-        public IActionResult Update([FromBody]ProjectUpdateDto projectUpdateDto) 
+        [HttpPut("Update")]
+        public IActionResult UpdateProduct([FromBody]ProductUpdateDto productUpdateDto) 
         {
             if(projectUpdateDto == null)
                 return BadRequest();
@@ -44,8 +47,8 @@ namespace TimeTrackerApp.Controllers
             _projectService.Update(projectUpdateDto);
             return Ok();
         }
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteProduct(int id)
         {
             if(id == 0)
                 return BadRequest();
