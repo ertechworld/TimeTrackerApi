@@ -1,8 +1,14 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TimeTracker.Service.Data;
 using TimeTracker.Service.DTOMapper;
 using TimeTracker.Service.Services;
 using TimeTracker.Service.Services.IServices;
+using TimeTrackerApp;
+using Microsoft.IdentityModel.Tokens;
+using TimeTracker.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +19,37 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     { options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)); 
 });
 
+//Services
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+//JWT
+var appSettingSection = builder.Configuration.GetSection("AppSettings");
+builder.Services.Configure<AppSettings>(appSettingSection);
+
+var appSetting = appSettingSection.Get<AppSettings>();
+var key = System.Text.Encoding.ASCII.GetBytes("thisismysecrettoken");
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddCookie()
+    .AddJwtBearer(x =>
+    {
+        x.RequireHttpsMetadata = false;
+        x.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = true
+        };
+    });
+
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -30,7 +64,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
+app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
