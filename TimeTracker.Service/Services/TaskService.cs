@@ -53,21 +53,14 @@ namespace TimeTracker.Service.Services
         }
         public async Task<IEnumerable<TaskResponseDto>> GetAll(string? querySearch)
         {
-            var query = _context.Tasks.AsQueryable();
-
+            var query = _context.Tasks.Where(x => x.IsDeleted != true);
             if (!string.IsNullOrEmpty(querySearch))
             {
                 query = query.Where(x => x.Name.Contains(querySearch));
             }
-
             var tasks = await query.ToListAsync();
-
-            var mappedTasks = tasks
-                .Select(task => _mapper.Map<Task, TaskResponseDto>(task));
-
-            return mappedTasks;
+            return tasks.Select(task => _mapper.Map<Task, TaskResponseDto>(task));
         }
-
         public async Task<TaskRequestDto> Update(int id, TaskRequestDto taskDto)
         {
             var existingTask = await _context.Tasks.FindAsync(id);
