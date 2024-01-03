@@ -10,50 +10,73 @@ namespace TimeTrackerApp.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _projectService;
-        public ProjectController(IProjectService projectService,IMapper mapper)
+        public ProjectController(IProjectService projectService, IMapper mapper)
         {
             _projectService = projectService;
         }
         [HttpGet("GetAll")]
-        public IActionResult GetAllProducts()
+        public async Task<IActionResult> GetAllAsync(string? querySearch)
         {
-            var productList = _projectService.GetProjects();
-            return Ok(productList);
+            var projectList = await _projectService.GetAll(querySearch);
+            return Ok(projectList);
         }
         [HttpGet("GetById/{id}")]
-        public IActionResult GetProduct(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            if (id == 0) return BadRequest(ModelState);
-            var products = _productService.GetProductById(id);
-            return Ok(products);
-            var projects = _projectService.GetProjectById(id);
-            return Ok(projects);
+            if (id == 0)
+            {
+                return BadRequest(ModelState);
+            }
+            var project = await _projectService.GetById(id);
+            if (project == null)
+            {
+                return NotFound(); 
+            }
+            return Ok(project);
         }
         [HttpPost("Add")]
-        public IActionResult AddProduct([FromBody]ProductRequestDto productRequestDto)
+        public async Task<IActionResult> AddAsync([FromBody] ProjectRequestDto projectRequestDto)
         {
             if (projectRequestDto == null)
+            {
                 return BadRequest();
-            if(!ModelState.IsValid) return BadRequest("Model Invalid !!!");
-            _projectService.Add(projectRequestDto);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model Invalid !!!");
+            }
+            await _projectService.Add(projectRequestDto);
             return Ok();
         }
+
         [HttpPut("Update")]
-        public IActionResult UpdateProduct([FromBody]ProductUpdateDto productUpdateDto) 
+        public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] ProjectRequestDto projectUpdateDto)
         {
-            if(projectUpdateDto == null)
+            if (projectUpdateDto == null)
+            {
                 return BadRequest();
-            if (!ModelState.IsValid) return BadRequest("Model Invalid");
-            _projectService.Update(projectUpdateDto);
-            return Ok();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model Invalid");
+            }
+            var updatedValue = await _projectService.Update(id, projectUpdateDto);
+            if (updatedValue == null)
+            {
+                return NotFound();
+            }
+            return Ok(updatedValue);
         }
         [HttpDelete("Delete/{id}")]
-        public IActionResult DeleteProduct(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            if(id == 0)
+            if (id == 0)
+            {
                 return BadRequest();
-            _projectService.Delete(id);
+            }
+            await _projectService.Delete(id);
             return Ok();
         }
     }
 }
+

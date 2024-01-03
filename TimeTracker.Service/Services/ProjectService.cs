@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using TimeTracker.DTO.Product;
+using TimeTracker.DTO.Task;
 using TimeTracker.Service.Data;
 using TimeTracker.Service.Models;
 using TimeTracker.Service.Services.IServices;
@@ -16,42 +19,51 @@ namespace TimeTracker.Service.Services
             _mapper = mapper;
         }
 
-        public void Add(ProjectRequestDto projectRequestDto)
+        public async Task<ProjectRequestDto> Add(ProjectRequestDto projectRequestDto)
         {
-            var product = _mapper.Map<Project>(projectRequestDto);
-            _context.Projects.Add(product);
-            _context.SaveChanges();
+            var project = _mapper.Map<Project>(projectRequestDto);
+            await _context.Projects.AddAsync(project);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<ProjectRequestDto>(project);
         }
 
-        public void Delete(int id)
-        {
-            var productInDb = _context.Projects.Find(id);
-            if (productInDb != null)
-                _context.Projects.Remove(productInDb);
-            _context.SaveChanges();
-        }
 
-        public ProjectResponseDto GetProjectById(int id)
+        public async Task<ProjectRequestDto> Delete(int id)
         {
-            Project product = _context.Projects.Find(id);
-            if (product != null)
+            Project project = await _context.Projects.FindAsync(id);
+            if (project != null)
             {
-                return _mapper.Map<ProjectResponseDto>(product);
+                project.IsDeleted = true;
+                await _context.SaveChangesAsync();
             }
-            return null;
+            return _mapper.Map<ProjectRequestDto>(project);
         }
 
-        public IEnumerable<ProjectResponseDto> GetProjects()
+        public async Task<ProjectRequestDto> GetById(int id)
         {
-            return _context.Projects.ToList().Select(_mapper.Map<Project, ProjectResponseDto>);
+            Project project = await _context.Projects.FindAsync(id);
+                return _mapper.Map<ProjectRequestDto>(project);   
         }
-        public void Update(ProjectUpdateDto productUpdateDto)
+        public async Task<IEnumerable<ProjectResponseDto>> GetAll(string? querySearch)
         {
-            var product = _mapper.Map<Project>(productUpdateDto);
-            _context.Projects.Update(product);
-            _context.SaveChanges();
+            var query = _context.Projects.Where(x => x.IsDeleted != true);
+            if (!string.IsNullOrEmpty(querySearch))
+            {
+                query = query.Where(x => x.Name.Contains(querySearch));
+            }
+            var activeProjects = await query.ToListAsync();
+            return activeProjects.Select(project => _mapper.Map<Project, ProjectResponseDto>(project));
         }
-
-
+        public async Task<ProjectRequestDto> Update(int id, ProjectRequestDto projectUpdateDto)
+        {
+            var existingProject = await _context.Projects.FindAsync(id);
+            if (existingProject != null)
+            {
+                _mapper.Map(projectUpdateDto, existingProject);
+                await _context.SaveChangesAsync(); 
+            }
+            return _mapper.Map<ProjectRequestDto>(existingProject);
+        }
     }
 }
+

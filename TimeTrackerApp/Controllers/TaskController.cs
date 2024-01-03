@@ -19,41 +19,61 @@ namespace TimeTrackerApp.Controllers
                 _taskService= taskService;
         }
         [HttpGet("GetAll")]
-        public IActionResult GetAll() { 
-            var taskList= _taskService.GetTasks();
+        public async Task<IActionResult> GetAllAsync(string querySearch)
+        {
+            var taskList = await _taskService.GetAll(querySearch);
             return Ok(taskList);
         }
-        [HttpGet("{id}", Name = "GetTaskById")]
-        public IActionResult Get(int id)
+
+        [HttpGet("GetById/{id}")]
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var tasks = _taskService.GetTaskById(id);
-            return Ok(tasks);
+            var task = await _taskService.GetById(id);
+
+            if (task != null)
+            {
+                return Ok(task);
+            }
+
+            return NotFound(); 
         }
+
         [HttpPost("Add")]
-        public IActionResult Save([FromBody] TaskRequestDto taskDto)
+        public async Task<IActionResult> AddAsync([FromBody] TaskRequestDto taskDto)
         {
             if (taskDto == null)
                 return BadRequest();
-            if (!ModelState.IsValid) return BadRequest("Model Invalid !!!");
-            _taskService.Add(taskDto);
-            return Ok();
+
+            if (!ModelState.IsValid)
+                return BadRequest("Model Invalid !!!");
+
+            await _taskService.Add(taskDto);
+
+            return Ok(true);
         }
+
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] TaskRequestDto taskDto)
-        { 
-            if (taskDto == null)
-                return BadRequest();
-            if (!ModelState.IsValid) return BadRequest("Model Invalid");
-            _taskService.Update(taskDto);
-            return Ok();
+        public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] TaskRequestDto taskDto)
+        {
+            var updatedValue = await _taskService.Update(id, taskDto);
+
+            if (updatedValue == null)
+            {
+                return NotFound(); 
+            }
+
+            return Ok(updatedValue);
         }
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+
+
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {
             if (id == 0)
                 return BadRequest();
-            _taskService.Delete(id);
+            await _taskService.Delete(id);
             return Ok();
         }
+
     }
 }

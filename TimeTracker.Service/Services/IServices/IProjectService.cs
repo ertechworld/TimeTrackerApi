@@ -4,10 +4,12 @@ namespace TimeTracker.Service.Services.IServices
 {
     public interface IProjectService
     {
-        IEnumerable<ProjectResponseDto> GetProjects();
-        ProjectResponseDto GetProjectById(int id);
-        void Add(ProjectRequestDto projectDto);
-        void Update(ProjectUpdateDto projectDto);
-        void Delete(int id);
+        Task<IEnumerable<ProjectResponseDto>> GetAll(string? querySearch);
+
+        Task<ProjectRequestDto> GetById(int id);
+        Task<ProjectRequestDto> Add(ProjectRequestDto projectDto);
+        Task<ProjectRequestDto> Update(int id, ProjectRequestDto projectDto);
+        Task<ProjectRequestDto> Delete(int id);
     }
 }
+

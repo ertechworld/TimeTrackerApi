@@ -10,10 +10,10 @@ namespace TimeTracker.Service.Services.IServices
 {
     public interface ITaskService
     {
-        IEnumerable<TaskRequestDto> GetTasks();
-        TaskRequestDto GetTaskById(int id);
-        void Add(TaskRequestDto taskDto);
-        void Update(TaskRequestDto taskDto);
-        void Delete(int id);
+       Task< IEnumerable<TaskResponseDto>> GetAll(string querySearch);
+       Task< TaskRequestDto> GetById(int id);
+        Task<TaskRequestDto> Add(TaskRequestDto taskDto);
+        Task<TaskRequestDto> Update(int id,TaskRequestDto taskDto);
+        Task<TaskRequestDto> Delete(int id);
     }
 }

@@ -13,7 +13,7 @@ namespace TimeTracker.DTO.Task
         public int ProjectId { get; set; }
 
         [Required(ErrorMessage = "Vinarliga skriva navn")]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public string? Description { get; set; }
 

@@ -23,43 +23,61 @@ namespace TimeTracker.Service.Services
             _context = context;
             _mapper = mapper;
         }
-        public void Add(TaskRequestDto taskDto)
+        public async Task<TaskRequestDto> Add(TaskRequestDto taskDto)
         {
             var task = _mapper.Map<Task>(taskDto);
             _context.Tasks.Add(task);
-            _context.SaveChanges();
-          
+            await _context.SaveChangesAsync();
+            return _mapper.Map<TaskRequestDto>(task);
         }
-
-        public void Delete(int id)
+        public async Task<TaskRequestDto> Delete(int id)
         {
-            var taskInDb = _context.Tasks.Find(id);
-            if (taskInDb != null)
-                _context.Tasks.Remove(taskInDb);
-            _context.SaveChanges();
+            Task task = await _context.Tasks.FindAsync(id);
+
+            if (task != null)
+            {
+                task.IsDeleted = true;
+                await _context.SaveChangesAsync();
+                return _mapper.Map<TaskRequestDto>(task);  
+            }
+            return null; 
         }
-
-        public TaskRequestDto GetTaskById(int id)
+        public async Task<TaskRequestDto> GetById(int id)
         {
-            Task task = _context.Tasks.Find(id);
+            Task task = await _context.Tasks.FindAsync(id);
             if (task != null)
             {
                 return _mapper.Map<TaskRequestDto>(task);
             }
             return null;
         }
-
-       
-        public IEnumerable<TaskRequestDto> GetTasks()
+        public async Task<IEnumerable<TaskResponseDto>> GetAll(string? querySearch)
         {
-            return _context.Tasks.ToList().Select(_mapper.Map<Task, TaskRequestDto>);
+            var query = _context.Tasks.AsQueryable();
+
+            if (!string.IsNullOrEmpty(querySearch))
+            {
+                query = query.Where(x => x.Name.Contains(querySearch));
+            }
+
+            var tasks = await query.ToListAsync();
+
+            var mappedTasks = tasks
+                .Select(task => _mapper.Map<Task, TaskResponseDto>(task));
+
+            return mappedTasks;
         }
 
-        public void Update(TaskRequestDto taskDto)
+        public async Task<TaskRequestDto> Update(int id, TaskRequestDto taskDto)
         {
-            var task = _mapper.Map<Task>(taskDto);
-            _context.Tasks.Update(task);
-            _context.SaveChanges();
+            var existingTask = await _context.Tasks.FindAsync(id);
+            if (existingTask != null)
+            {
+                _mapper.Map(taskDto, existingTask);
+                await _context.SaveChangesAsync();
+            }
+            return _mapper.Map<TaskRequestDto>(existingTask);
         }
     }
 }
+

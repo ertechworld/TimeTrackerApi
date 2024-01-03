@@ -10,9 +10,9 @@ namespace TimeTracker.Service.DTOMapper
     {
         public MappingProfile()
         {
-            CreateMap<ProjectRequestDto,Project>();
-            CreateMap<ProjectUpdateDto, Project>();
-            CreateMap<Project, ProjectResponseDto>();
+
+            CreateMap<Project, ProjectRequestDto>().ReverseMap();
+            CreateMap<Project, ProjectResponseDto>().ReverseMap();
             CreateMap<Task, TaskRequestDto>().ReverseMap();
             CreateMap<Task, TaskResponseDto>().ReverseMap();
 
