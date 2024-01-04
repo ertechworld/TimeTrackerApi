@@ -7,7 +7,7 @@ using Task = TimeTracker.Service.Models.Task;
 
 namespace TimeTracker.Service.Data
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext: DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options) 
         {
@@ -22,5 +22,6 @@ namespace TimeTracker.Service.Data
 
         public virtual DbSet<Leavetype> Leavetypes { get; set; }
         public virtual DbSet<Leave> Leaves { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

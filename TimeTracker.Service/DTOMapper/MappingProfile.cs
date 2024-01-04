@@ -6,6 +6,7 @@ using TimeTracker.DTO.Status;
 using TimeTracker.DTO.Task;
 using TimeTracker.DTO.Userattendance;
 using TimeTracker.Service.Entities;
+using TimeTracker.DTO.User;
 using TimeTracker.Service.Models;
 using Task = TimeTracker.Service.Models.Task;
 
@@ -25,6 +26,8 @@ namespace TimeTracker.Service.DTOMapper
             CreateMap<Leavetype, LeavetypeDto>().ReverseMap();
             CreateMap<Leave,LeaveRequestDto>().ReverseMap();
             CreateMap<Leave, LeaveResponseDto>().ReverseMap();
+            CreateMap<UserRequestDto, User>();
+            CreateMap<User, UserResponseDto>();
         }
     }
 }
