@@ -35,19 +35,28 @@ namespace TimeTrackerApp.Controllers
             return Ok(project);
         }
         [HttpPost("Add")]
-        public async Task<IActionResult> AddAsync([FromBody] ProjectRequestDto projectRequestDto)
+        public async Task<IActionResult> AddProject([FromBody] ProjectRequestDto projectRequestDto)
         {
             if (projectRequestDto == null)
             {
-                return BadRequest();
+                return BadRequest("Request body is empty");
             }
             if (!ModelState.IsValid)
             {
-                return BadRequest("Model Invalid !!!");
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(new { Message = "Validation failed", Errors = errors });
             }
-            await _projectService.Add(projectRequestDto);
-            return Ok();
+             bool isAdded = await _projectService.Add(projectRequestDto);
+             if (isAdded)
+             {
+                    return Ok("Project added successfully");
+             }
+             else
+             {
+                    return StatusCode(500, "Failed to add project");
+              }    
         }
+
 
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] ProjectRequestDto projectUpdateDto)
@@ -75,7 +84,7 @@ namespace TimeTrackerApp.Controllers
                 return BadRequest();
             }
             await _projectService.Delete(id);
-            return Ok();
+            return Ok(true);
         }
     }
 }

@@ -18,16 +18,13 @@ namespace TimeTracker.Service.Services
             _context = context;
             _mapper = mapper;
         }
-
-        public async Task<ProjectRequestDto> Add(ProjectRequestDto projectRequestDto)
+        public async Task<bool> Add(ProjectRequestDto projectDto)
         {
-            var project = _mapper.Map<Project>(projectRequestDto);
-            await _context.Projects.AddAsync(project);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<ProjectRequestDto>(project);
+                var project = _mapper.Map<Project>(projectDto);
+                await _context.Projects.AddAsync(project);
+                await _context.SaveChangesAsync();
+                return true;
         }
-
-
         public async Task<ProjectRequestDto> Delete(int id)
         {
             Project project = await _context.Projects.FindAsync(id);
@@ -38,11 +35,10 @@ namespace TimeTracker.Service.Services
             }
             return _mapper.Map<ProjectRequestDto>(project);
         }
-
         public async Task<ProjectRequestDto> GetById(int id)
         {
             Project project = await _context.Projects.FindAsync(id);
-                return _mapper.Map<ProjectRequestDto>(project);   
+            return _mapper.Map<ProjectRequestDto>(project);   
         }
         public async Task<IEnumerable<ProjectResponseDto>> GetAll(string? querySearch)
         {
@@ -51,18 +47,18 @@ namespace TimeTracker.Service.Services
             {
                 query = query.Where(x => x.Name.Contains(querySearch));
             }
-            var activeProjects = await query.ToListAsync();
-            return activeProjects.Select(project => _mapper.Map<Project, ProjectResponseDto>(project));
+            var projects = await query.ToListAsync();
+            return projects.Select(project => _mapper.Map<Project, ProjectResponseDto>(project));
         }
         public async Task<ProjectRequestDto> Update(int id, ProjectRequestDto projectUpdateDto)
         {
-            var existingProject = await _context.Projects.FindAsync(id);
-            if (existingProject != null)
+            var project = await _context.Projects.FindAsync(id);
+            if (project != null)
             {
-                _mapper.Map(projectUpdateDto, existingProject);
+                _mapper.Map(projectUpdateDto, project);
                 await _context.SaveChangesAsync(); 
             }
-            return _mapper.Map<ProjectRequestDto>(existingProject);
+            return _mapper.Map<ProjectRequestDto>(project);
         }
     }
 }

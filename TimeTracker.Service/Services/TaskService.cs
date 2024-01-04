@@ -33,7 +33,6 @@ namespace TimeTracker.Service.Services
         public async Task<TaskRequestDto> Delete(int id)
         {
             Task task = await _context.Tasks.FindAsync(id);
-
             if (task != null)
             {
                 task.IsDeleted = true;
@@ -63,13 +62,18 @@ namespace TimeTracker.Service.Services
         }
         public async Task<TaskRequestDto> Update(int id, TaskRequestDto taskDto)
         {
-            var existingTask = await _context.Tasks.FindAsync(id);
-            if (existingTask != null)
+            var task = await _context.Tasks.FindAsync(id);
+            if (task != null)
             {
-                _mapper.Map(taskDto, existingTask);
+                _mapper.Map(taskDto, task);
                 await _context.SaveChangesAsync();
             }
-            return _mapper.Map<TaskRequestDto>(existingTask);
+            return _mapper.Map<TaskRequestDto>(task);
+        }
+        public async Task<IEnumerable<TaskResponseDto>> GetByProjectId(int projectId)
+        {
+            var tasks = await _context.Tasks.Where(task => task.ProjectId == projectId && task.IsDeleted == false).ToListAsync();
+            return tasks.Select(task => _mapper.Map<Task, TaskResponseDto>(task));
         }
     }
 }

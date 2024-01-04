@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TimeTracker.Service.Entities
+{
+    public  class Jobtype
+    {
+        public int Id { get; set; }
+
+        public string? Name { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDeleted { get; set; }
+
+        public int? SortOrder { get; set; }
+
+        public DateTime? CreatedOn { get; set; }
+
+        public DateTime? ModifiedOn { get; set; }
+
+        public int? TenantId { get; set; }
+
+      
+    }
+}

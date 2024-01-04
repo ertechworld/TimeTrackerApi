@@ -12,7 +12,6 @@ namespace TimeTracker.DTO.Product
         public string Description { get; set; } = string.Empty;
         public string Priority { get; set; } = string.Empty;
         public DateTime? StartDate { get; set; }
-
         public DateTime? EndDate { get; set; }
         [Required(ErrorMessage = "Vinarliga skriva navn")]
         public int? TenantId { get; set; }
