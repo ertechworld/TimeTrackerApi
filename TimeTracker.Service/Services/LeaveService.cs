@@ -1,18 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TimeTracker.DTO.Leave;
-using TimeTracker.DTO.Product;
-using TimeTracker.DTO.Task;
 using TimeTracker.Service.Data;
 using TimeTracker.Service.Entities;
-using TimeTracker.Service.Models;
 using TimeTracker.Service.Services.IServices;
-using Task = TimeTracker.Service.Models.Task;
 
 namespace TimeTracker.Service.Services
 {
@@ -52,6 +43,7 @@ namespace TimeTracker.Service.Services
             }
             return null;
         }
+     
         public async Task<IEnumerable<LeaveResponseDto>> GetAll()
         {
             var leaves = await _context.Leaves
@@ -69,7 +61,16 @@ namespace TimeTracker.Service.Services
                 await _context.SaveChangesAsync();
             }
             return _mapper.Map<LeaveRequestDto>(leave);
-        }  
+        }
+        public async Task<IEnumerable<LeaveResponseDto>> GetAllByUserId(int userId)
+        {
+            var currentDate = DateTime.Now.Date;
+            var leaves = await _context.Leaves
+                .Where(leave => leave.UserId == userId && leave.IsDeleted != true && leave.StartDate >= currentDate)
+                .OrderBy(leave => leave.StartDate) 
+                .ToListAsync();
+            return leaves.Select(leave => _mapper.Map<Leave, LeaveResponseDto>(leave));
+        }
     }
 }
 

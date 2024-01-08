@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TimeTracker.DTO.Product;
+
 namespace TimeTracker.DTO.Task
 {
     public class TaskRequestDto

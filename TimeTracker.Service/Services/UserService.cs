@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TimeTracker.DTO.User;
 using TimeTracker.Service.Data;
 using TimeTracker.Service.Services.IServices;
 using Microsoft.Extensions.Options;
-using TimeTracker.Service.Models;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -32,10 +26,9 @@ namespace TimeTracker.Service.Services
 
         public async Task<UserResponseDto> Authenticate(UserRequestDto userRequestDto)
         {
-            //var user = _mapper.Map<User>(userRequestDto);
-            //var user = _mapper.Map<User>(userRequestDto);
-            var result =  _context.Users.Where(x => x.Password == userRequestDto.Password).FirstOrDefault();
-            
+          var result = _context.Users
+          .Include(u => u.Role) 
+          .FirstOrDefault(x => x.Password == userRequestDto.Password);
             if (result == null)
             {
                 return null;
@@ -43,7 +36,6 @@ namespace TimeTracker.Service.Services
             //JWT token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = System.Text.Encoding.ASCII.GetBytes("thisismysecrettoken");
-
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -51,7 +43,7 @@ namespace TimeTracker.Service.Services
                     new Claim(ClaimTypes.Name,result.FirstName),
                     new Claim(ClaimTypes.Email,result.Email),
                     new Claim(ClaimTypes.MobilePhone,result.PhoneNumber),
-                    new Claim(ClaimTypes.Role,"Admin"),
+                    new Claim(ClaimTypes.Role, result.Role?.Name ?? "DefaultRole"), 
                     new Claim(ClaimTypes.Hash,result.Password)
                 }),
                 Expires = DateTime.UtcNow.AddHours(30),
@@ -60,10 +52,7 @@ namespace TimeTracker.Service.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             result.Token = tokenHandler.WriteToken(token);
-
             return _mapper.Map<UserResponseDto>(result);
-
-        }
-        
+        }    
     }
 }

@@ -1,17 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimeTracker.DTO.Product;
-using TimeTracker.DTO.Status;
 using TimeTracker.DTO.Userattendance;
 using TimeTracker.Service.Data;
 using TimeTracker.Service.Entities;
-using TimeTracker.Service.Models;
-using TimeTracker.Service.Services;
 using TimeTracker.Service.Services.IServices;
 
 namespace TimeTracker.Service.Services
@@ -46,6 +37,37 @@ namespace TimeTracker.Service.Services
 
             return _mapper.Map<UserattendanceDto>(userattendance);
         }
+        public async Task<IEnumerable<HourListDto>> GetHourList()
+        {
+            var allUserHourList = await _context.Userattendances
+                .Include(u => u.Status)
+                .Include(u => u.JobType)
+                .Include(u => u.Project)
+                .Include(u => u.Task)
+                .Include(u=>u.User)
+                .OrderBy(u => u.CreatedOn)
+                .ToListAsync();
+
+            return allUserHourList.Select(userattendance => _mapper.Map<Userattendance, HourListDto>(userattendance));
+        }
+
+
+        public async Task<IEnumerable<HourListDto>> GetHourListByUserId(int userId)
+        {
+            var userHourList = await _context.Userattendances
+                .Include(u => u.Status)
+                .Include(u => u.JobType)
+                .Include(u => u.Project)
+                .Include(u => u.Task)
+                .Where(u => u.UserId == userId)
+                .OrderBy(u => u.CreatedOn)
+                .ToListAsync();
+
+            return userHourList.Select(userattendance => _mapper.Map<Userattendance, HourListDto>(userattendance));
+        }
+
 
     }
+
 }
+

@@ -7,11 +7,10 @@ namespace TimeTrackerApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : Controller
+    public class AccountController : Controller
     {
-
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        public AccountController(IUserService userService)
         {
             _userService = userService;
         }
@@ -21,8 +20,7 @@ namespace TimeTrackerApp.Controllers
         {
             var user = await _userService.Authenticate(userRequestDto);
             if (user == null) { return NotFound(); }
-            return Ok(user);
-            
+            return Ok(user); 
         }
     }
 }

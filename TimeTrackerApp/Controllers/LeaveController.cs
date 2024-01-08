@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.DTO.Leave;
-using TimeTracker.DTO.Product;
+
 using TimeTracker.DTO.Task;
 using TimeTracker.Service.Services;
 using TimeTracker.Service.Services.IServices;
@@ -11,6 +12,7 @@ namespace TimeTrackerApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LeaveController : ControllerBase
     {
         private readonly ILeaveService _leaveService;
@@ -38,11 +40,18 @@ namespace TimeTrackerApp.Controllers
         public async Task<IActionResult> AddAsync([FromBody] LeaveRequestDto leaveDto)
         {
             if (leaveDto == null)
-                return BadRequest();
+            {
+                return BadRequest(false);
+            }
             if (!ModelState.IsValid)
-                return BadRequest("Model Invalid !!!");
-            await _leaveService.Add(leaveDto);
-            return Ok(true);
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+                return BadRequest(new { Success = false, Errors = errors });
+            }    
+             await _leaveService.Add(leaveDto);
+             return Ok(new { Success = true });        
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] LeaveRequestDto leaveDto)
@@ -61,6 +70,17 @@ namespace TimeTrackerApp.Controllers
                 return BadRequest();
             await _leaveService.Delete(id);
             return Ok(true);
+        }
+        [HttpGet("GetAllByUserId/{userId}")]
+        public async Task<IActionResult> GetAllByUserId(int userId)
+        {
+            var leaves = await _leaveService.GetAllByUserId(userId);
+
+            if (leaves == null || !leaves.Any())
+            {
+                return NotFound($"No leaves found for user ID {userId}");
+            }
+            return Ok(leaves);
         }
     }
 }

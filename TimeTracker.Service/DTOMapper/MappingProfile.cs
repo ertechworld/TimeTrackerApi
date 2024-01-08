@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
 using TimeTracker.DTO.Leave;
 using TimeTracker.DTO.Leavetype;
-using TimeTracker.DTO.Product;
 using TimeTracker.DTO.Status;
 using TimeTracker.DTO.Task;
 using TimeTracker.DTO.Userattendance;
 using TimeTracker.Service.Entities;
 using TimeTracker.DTO.User;
-using TimeTracker.Service.Models;
-using Task = TimeTracker.Service.Models.Task;
+using TimeTracker.DTO.Project;
+using TimeTracker.DTO.Jobtype;
+using Task = TimeTracker.Service.Entities.Task;
+using TimeTracker.DTO.Break;
 
 namespace TimeTracker.Service.DTOMapper
 {
@@ -28,6 +29,8 @@ namespace TimeTracker.Service.DTOMapper
             CreateMap<Leave, LeaveResponseDto>().ReverseMap();
             CreateMap<UserRequestDto, User>();
             CreateMap<User, UserResponseDto>();
+            CreateMap<Userattendance,HourListDto>().ReverseMap();
+            CreateMap<Break ,BreakDto>().ReverseMap();
         }
     }
 }

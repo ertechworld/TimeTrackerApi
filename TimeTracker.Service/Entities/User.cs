@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimeTracker.Service.Models
+namespace TimeTracker.Service.Entities
 {
     public class User
     {
@@ -17,6 +17,8 @@ namespace TimeTracker.Service.Models
         public string? PhoneNumber { get; set; } = string.Empty;
         public string? UploadedFiles { get; set; } = string.Empty;
         [NotMapped]
-        public string Token { get;set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
+        public string? HourlyRate { get; set; }
+        public virtual Role? Role { get; set; }
     }
 }

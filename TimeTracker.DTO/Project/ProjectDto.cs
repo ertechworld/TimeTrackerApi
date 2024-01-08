@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TimeTracker.DTO.Task;
 
-namespace TimeTracker.DTO.Product
+namespace TimeTracker.DTO.Project
 {
     public class ProjectRequestDto
     {
-     
+
         [Required(ErrorMessage = "Vinarliga skriva navn")]
         public string Name { get; set; } = string.Empty;
-       
+
         public string Description { get; set; } = string.Empty;
         public string Priority { get; set; } = string.Empty;
         public DateTime? StartDate { get; set; }

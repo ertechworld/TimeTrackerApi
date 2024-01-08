@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,6 @@ namespace TimeTracker.DTO.User
         public string? UploadedFiles { get; set; } = string.Empty;
         [NotMapped]
         public string Token { get; set; } = string.Empty;
-
+        public string? RoleName { get; set; }
     }
 }

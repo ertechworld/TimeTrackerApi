@@ -5,14 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimeTracker.Service.Models
+namespace TimeTracker.Service.Entities
 {
-    public  class Task
+    public class Task
     {
         public int Id { get; set; }
         public int ProjectId { get; set; }
+       // public string? ProjectName { get; set; }
 
-      
+
         public string Name { get; set; }
 
 
@@ -28,6 +29,7 @@ namespace TimeTracker.Service.Models
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
+        public virtual Project? Project { get; set; }
 
 
     }

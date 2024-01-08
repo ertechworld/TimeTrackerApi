@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using TimeTracker.DTO.Product;
+
 using TimeTracker.DTO.Status;
 using TimeTracker.DTO.Userattendance;
 using TimeTracker.Service.Entities;
@@ -14,5 +15,8 @@ namespace TimeTracker.Service.Services.IServices
     {
         Task<UserattendanceDto> Add(UserattendanceDto userattendanceDto);
         Task<UserattendanceDto> Update(int id, UserattendanceDto userattendanceDto);
+        Task<IEnumerable<HourListDto>> GetHourList();
+        Task<IEnumerable<HourListDto>> GetHourListByUserId(int userId);
+      
     }
 }

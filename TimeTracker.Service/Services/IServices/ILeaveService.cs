@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TimeTracker.DTO.Leave;
-using TimeTracker.DTO.Product;
+
 using TimeTracker.DTO.Task;
+using TimeTracker.Service.Entities;
 
 namespace TimeTracker.Service.Services.IServices
 {
@@ -16,7 +17,9 @@ namespace TimeTracker.Service.Services.IServices
         Task<LeaveRequestDto> Add(LeaveRequestDto leaveDto);
         Task<LeaveRequestDto> Update(int id, LeaveRequestDto leaveDto);
         Task<LeaveRequestDto> Delete(int id);
-        
+        Task<IEnumerable<LeaveResponseDto>> GetAllByUserId(int userId);
+
+
 
     }
 }

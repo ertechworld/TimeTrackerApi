@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TimeTracker.DTO.Product;
+
 using TimeTracker.DTO.Task;
 using TimeTracker.Service.Services;
 using TimeTracker.Service.Services.IServices;
@@ -10,6 +11,7 @@ namespace TimeTrackerApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TaskController : ControllerBase
     {
         private readonly ITaskService _taskService;
@@ -37,12 +39,20 @@ namespace TimeTrackerApp.Controllers
         public async Task<IActionResult> AddAsync([FromBody] TaskRequestDto taskDto)
         {
             if (taskDto == null)
-                return BadRequest();
+            {        
+                return BadRequest(false);
+            }
             if (!ModelState.IsValid)
-                return BadRequest("Model Invalid !!!");
-            await _taskService.Add(taskDto);
-            return Ok(true);
+            {              
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+                return BadRequest(new { Success = false, Errors = errors });
+            }
+              await _taskService.Add(taskDto);
+              return Ok(new { Success = true });   
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] TaskRequestDto taskDto)

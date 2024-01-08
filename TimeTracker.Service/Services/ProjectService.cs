@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using TimeTracker.DTO.Product;
+using TimeTracker.DTO.Project;
 using TimeTracker.DTO.Task;
 using TimeTracker.Service.Data;
-using TimeTracker.Service.Models;
+using TimeTracker.Service.Entities;
 using TimeTracker.Service.Services.IServices;
 
 namespace TimeTracker.Service.Services

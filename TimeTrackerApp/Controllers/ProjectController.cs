@@ -1,12 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TimeTracker.DTO.Product;
+using TimeTracker.DTO.Project;
 using TimeTracker.Service.Services.IServices;
 
 namespace TimeTrackerApp.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+   [ApiController]
+   [Authorize]
+    [Authorize(Roles = "Admin,Leiðari")]
+
+
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _projectService;
@@ -35,7 +40,7 @@ namespace TimeTrackerApp.Controllers
             return Ok(project);
         }
         [HttpPost("Add")]
-        public async Task<IActionResult> AddProject([FromBody] ProjectRequestDto projectRequestDto)
+        public async Task<IActionResult> Add([FromBody] ProjectRequestDto projectRequestDto)
         {
             if (projectRequestDto == null)
             {

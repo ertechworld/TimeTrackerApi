@@ -12,7 +12,7 @@ namespace TimeTracker.DTO.Leave
         public string? ReasonForLeave { get; set; }
         public int? UserId { get; set; }
         public int? LeaveTypeId { get; set; }
-        public string? LeaveTypeName { get; set; }
+      
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
@@ -20,6 +20,7 @@ namespace TimeTracker.DTO.Leave
     public class LeaveResponseDto : LeaveRequestDto
     {
        public int Id { get; set; }
+       public string? LeaveTypeName { get; set; }
 
     }
 }

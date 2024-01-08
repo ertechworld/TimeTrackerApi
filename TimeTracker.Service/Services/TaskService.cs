@@ -1,16 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimeTracker.DTO.Product;
 using TimeTracker.DTO.Task;
 using TimeTracker.Service.Data;
-using TimeTracker.Service.Models;
 using TimeTracker.Service.Services.IServices;
-using Task = TimeTracker.Service.Models.Task;
+using Task = TimeTracker.Service.Entities.Task;
 
 namespace TimeTracker.Service.Services
 {
@@ -52,10 +45,12 @@ namespace TimeTracker.Service.Services
         }
         public async Task<IEnumerable<TaskResponseDto>> GetAll(string? querySearch)
         {
-            var query = _context.Tasks.Where(x => x.IsDeleted != true);
+            var query = _context.Tasks
+                .Include(t => t.Project)
+                .Where(t => t.IsDeleted != true);
             if (!string.IsNullOrEmpty(querySearch))
             {
-                query = query.Where(x => x.Name.Contains(querySearch));
+                query = query.Where(t => t.Name.Contains(querySearch));
             }
             var tasks = await query.ToListAsync();
             return tasks.Select(task => _mapper.Map<Task, TaskResponseDto>(task));

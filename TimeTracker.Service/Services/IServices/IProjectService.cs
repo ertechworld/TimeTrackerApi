@@ -1,4 +1,4 @@
-﻿using TimeTracker.DTO.Product;
+﻿using TimeTracker.DTO.Project;
 
 namespace TimeTracker.Service.Services.IServices
 {

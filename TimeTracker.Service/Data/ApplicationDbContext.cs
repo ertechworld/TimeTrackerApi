@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TimeTracker.Service.Entities;
-using TimeTracker.Service.Models;
-using Task = TimeTracker.Service.Models.Task;
+using Task = TimeTracker.Service.Entities.Task;
 
 
 
@@ -23,5 +22,7 @@ namespace TimeTracker.Service.Data
         public virtual DbSet<Leavetype> Leavetypes { get; set; }
         public virtual DbSet<Leave> Leaves { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Break> Breaks { get; set; }
     }
 }

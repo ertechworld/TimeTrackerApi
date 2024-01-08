@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Service.Services.IServices;
@@ -7,6 +8,7 @@ namespace TimeTrackerApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class JobTypeController : ControllerBase
     {
         private readonly IJobtypeService _jobtypeService;

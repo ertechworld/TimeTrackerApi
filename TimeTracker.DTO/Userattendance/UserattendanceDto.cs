@@ -8,13 +8,13 @@ namespace TimeTracker.DTO.Userattendance
 {
     public class UserattendanceDto
     {
-        public int? StatusId { get; set; }     
+        public int StatusId { get; set; }     
 
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
-        public int? TaskId { get; set; }
+        public int TaskId { get; set; }
 
-        public int? ProjectId { get; set; }
-        public int? JobTypeId { get; set; }
+        public int? ProjectId { get; set; } 
+        public int? JobTypeId { get; set; } 
     }
 }
