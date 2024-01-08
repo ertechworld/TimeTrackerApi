@@ -11,7 +11,7 @@ namespace TimeTracker.Service.Entities
     {
         public int Id { get; set; }
         public int ProjectId { get; set; }
-       // public string? ProjectName { get; set; }
+      
 
 
         public string Name { get; set; }
@@ -23,7 +23,7 @@ namespace TimeTracker.Service.Entities
 
         public int? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; }
-        public bool IsActive { get; set; } = true;
+        public bool? IsActive { get; set; }
         public string? Description { get; set; }
 
         public DateTime? StartDate { get; set; }
