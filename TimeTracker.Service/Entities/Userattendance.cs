@@ -23,12 +23,12 @@ namespace TimeTracker.Service.Entities
         public int? ProjectId { get; set; }
         public bool? IsLogOut { get; set; }
         public int? JobTypeId { get; set; }
-        public virtual Jobtype? JobType { get; set; }
-        public virtual Project? Project { get; set; }
+        public Jobtype? JobType { get; set; }
+        public  Project? Project { get; set; }
         public  Status? Status { get; set; }
         public Task? Task { get; set; }
         public  User? User { get; set; }
-        public  Break? Break { get; set; }
+      
     }
 
 }

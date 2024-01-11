@@ -1,0 +1,80 @@
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Numerics;
+using TimeTracker.DTO.ChangejobDto;
+using TimeTracker.DTO.Employee;
+using TimeTracker.DTO.Jobtype;
+using TimeTracker.DTO.Leave;
+using TimeTracker.DTO.Status;
+using TimeTracker.DTO.Userattendance;
+using TimeTracker.Service.Data;
+using TimeTracker.Service.Entities;
+using TimeTracker.Service.Services.IServices;
+
+namespace TimeTracker.Service.Services
+{
+    public class ChangejobService : IChangejobService
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
+
+        public ChangejobService(ApplicationDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+        public async Task<bool> Update(int id, ChangejobDto changejobUpdateDto)
+        {
+            try
+            {
+                var changejob = await _context.Userattendances
+                    .Include(c => c.Task)
+                    .Include(c => c.Project)
+                    .Include(c => c.JobType)
+                    .FirstOrDefaultAsync(c => c.Id == id);
+
+                if (changejob == null)
+                {
+                    return false;
+                }
+
+                // Update only the properties that are not null in the ChangejobUpdateDto
+                if (changejobUpdateDto.Description != null)
+                {
+                    changejob.Description = changejobUpdateDto.Description;
+                }
+
+                if (changejobUpdateDto.TaskId != null)
+                {
+                    changejob.TaskId = changejobUpdateDto.TaskId;
+                }
+
+              
+
+                if (changejobUpdateDto.ProjectId != null)
+                {
+                    changejob.ProjectId = changejobUpdateDto.ProjectId;
+                }
+
+                
+
+                if (changejobUpdateDto.JobTypeId != null)
+                {
+                    changejob.JobTypeId = changejobUpdateDto.JobTypeId;
+                }
+
+               
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it according to your needs
+                return false;
+            }
+        }
+
+    }
+}

@@ -32,6 +32,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ISystemSettingService, SystemSettingService>();
 builder.Services.AddScoped<IValidateIpService, ValidateIpService>();
+builder.Services.AddScoped<IChangejobService, ChangejobService>();
 
 
 

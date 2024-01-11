@@ -35,6 +35,7 @@ namespace TimeTracker.Service.Services
             }
             return _mapper.Map<UserattendanceDto>(userattendance);
         }
+
         public async Task<IEnumerable<HourListDto>> GetHourListbyId(int userId, int statusId)
         {
             var userHourList = await _context.Userattendances
@@ -42,10 +43,11 @@ namespace TimeTracker.Service.Services
                 .Include(u => u.JobType)
                 .Include(u => u.Project)
                 .Include(u => u.Task)
-                .Include(u => u.User)      
-                .Where(u => u.UserId == userId)
+                .Include(u => u.User)
+
+                .Where(u => u.UserId == userId && (statusId == null || u.StatusId == statusId))
                 .OrderBy(u => u.CreatedOn)
-                .ToListAsync();
+              .ToListAsync();
             var hourListDto = new HourListDto
             {
                 Details = _mapper.Map<List<HourListDto.Detail>>(userHourList),
@@ -53,6 +55,8 @@ namespace TimeTracker.Service.Services
             hourListDto.CalculateTotalDuration();
             return new List<HourListDto> { hourListDto };
         }
+
     }
+
 }
 

@@ -13,6 +13,7 @@ using TimeTracker.DTO.Employee;
 using TimeTracker.DTO.Staff;
 using TimeTracker.Service.Services;
 using TimeTracker.DTO.Systemsetting;
+using TimeTracker.DTO.ChangejobDto;
 
 namespace TimeTracker.Service.DTOMapper
 {
@@ -40,6 +41,7 @@ namespace TimeTracker.Service.DTOMapper
             CreateMap<Systemsetting, ValidateIp>();
              CreateMap<Userattendance, HourListDto.Detail>()
             .ForMember(dest => dest.CheckingInTime, opt => opt.MapFrom(src => src.CreatedOn));
+            CreateMap<Userattendance, ChangejobDto>().ReverseMap();
         }
     }
 }
