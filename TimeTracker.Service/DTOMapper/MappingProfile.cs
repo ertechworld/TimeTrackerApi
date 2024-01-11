@@ -35,7 +35,7 @@ namespace TimeTracker.Service.DTOMapper
             CreateMap<User, UserResponseDto>();
             CreateMap<Userattendance, HourListDto.Detail>();
             CreateMap<Userattendance, HourListDto>();
-            CreateMap<Break ,BreakDto>().ReverseMap();
+           
             CreateMap<User, EmployeeDto>().ReverseMap();
             CreateMap<Staffstatus, StaffStatusDto>().ReverseMap();
             CreateMap<Systemsetting, SystemSettingDto>().ReverseMap();
