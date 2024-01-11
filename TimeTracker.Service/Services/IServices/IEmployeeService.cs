@@ -11,10 +11,7 @@ namespace TimeTracker.Service.Services.IServices
 {
     public interface IEmployeeService
     {
+       
         Task<IEnumerable<EmployeeDto>> GetAll(string? querySearch);
-      
-
-
-
     }
 }

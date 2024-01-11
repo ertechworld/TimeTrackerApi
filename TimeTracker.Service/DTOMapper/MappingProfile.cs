@@ -10,6 +10,10 @@ using TimeTracker.DTO.Project;
 using TimeTracker.DTO.Jobtype;
 using Task = TimeTracker.Service.Entities.Task;
 using TimeTracker.DTO.Break;
+using TimeTracker.DTO.Employee;
+using TimeTracker.DTO.Staff;
+using TimeTracker.Service.Services;
+using TimeTracker.DTO.Systemsetting;
 
 namespace TimeTracker.Service.DTOMapper
 {
@@ -29,8 +33,15 @@ namespace TimeTracker.Service.DTOMapper
             CreateMap<Leave, LeaveResponseDto>().ReverseMap();
             CreateMap<UserRequestDto, User>();
             CreateMap<User, UserResponseDto>();
-            CreateMap<Userattendance,HourListDto>().ReverseMap();
+            CreateMap<Userattendance, HourListDto.Detail>();
+            CreateMap<Userattendance, HourListDto>();
             CreateMap<Break ,BreakDto>().ReverseMap();
+            CreateMap<User, EmployeeDto>().ReverseMap();
+            CreateMap<Staffstatus, StaffStatusDto>().ReverseMap();
+            CreateMap<Systemsetting, SystemSettingDto>().ReverseMap();
+            CreateMap<Systemsetting, ValidateIp>();
+             CreateMap<Userattendance, HourListDto.Detail>()
+            .ForMember(dest => dest.CheckingInTime, opt => opt.MapFrom(src => src.CreatedOn));
         }
     }
 }

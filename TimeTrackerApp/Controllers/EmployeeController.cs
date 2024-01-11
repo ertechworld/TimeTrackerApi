@@ -18,8 +18,9 @@ namespace TimeTrackerApp.Controllers
             _employeeService = employeeService;
 
         }
+       
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAll([FromQuery] string? querySearch)
+        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAll1([FromQuery] string? querySearch)
         {
             try
             {
@@ -31,6 +32,6 @@ namespace TimeTrackerApp.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        
+
     }
 }

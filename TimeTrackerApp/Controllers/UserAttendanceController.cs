@@ -61,32 +61,15 @@ namespace TimeTrackerApp.Controllers
 
             return Ok(userattendance);
         }
-        [HttpGet("GetHourList")]
-        public async Task<IActionResult> GetHourList()
-        {
-            var hourList = await _userattendanceService.GetHourList();
-            return Ok(hourList);
-        }
+       
 
-        [HttpGet("GetHourListByUserId/{userId}")]
-        public async Task<IActionResult> GetHourListByUserId(int userId)
-        {
-            var hourListByUserId = await _userattendanceService.GetHourListByUserId(userId);
-
-            if (hourListByUserId == null || !hourListByUserId.Any())
-            {
-                return NotFound($"No hour list found for user ID {userId}");
-            }
-
-            return Ok(hourListByUserId);
-        }
-        [HttpGet("get-hour-list/{userId}")]
-        public async Task<IActionResult> GetHourListWithBreakHoursAsync(int userId)
+        [HttpGet("GetHourListbyId")]
+        public async Task<IActionResult> GetHourListbyId([FromQuery] int userId, [FromQuery] int statusId)
         {
             try
             {
-                var hourListWithBreaks = await _userattendanceService.GetHourListWithBreakHoursAsync(userId);
-                return Ok(hourListWithBreaks);
+                var hourList = await _userattendanceService.GetHourListbyId(userId, statusId);
+                return Ok(hourList);
             }
             catch (Exception ex)
             {
@@ -94,18 +77,6 @@ namespace TimeTrackerApp.Controllers
             }
         }
 
-        private async Task<IActionResult> GetBreakHoursAsync(int userAttendanceId)
-        {
-            try
-            {
-                var breakHours = await _userattendanceService.GetBreakHoursAsync(userAttendanceId);
-                return Ok(breakHours);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
     }
 }
 

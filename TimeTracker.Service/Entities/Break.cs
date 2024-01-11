@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TimeTracker.Service.Entities
 {
-    public partial class Break
+    public  class Break
     {
         public int Id { get; set; }
 

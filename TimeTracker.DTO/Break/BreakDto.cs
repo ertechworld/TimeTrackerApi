@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TimeTracker.DTO.Break
 {
-    public partial class BreakDto
+    public  class BreakDto
     {
         public int Id { get; set; }
 
-        public bool? IsActive { get; set; }
+     
 
         public DateTime? BreakInTime { get; set; }
 
@@ -20,7 +20,7 @@ namespace TimeTracker.DTO.Break
 
         public DateTime? CreatedOn { get; set; }
 
-        public int? UserAttendanceId { get; set; }
+       public int? UserAttendanceId { get; set; }
 
        
     }

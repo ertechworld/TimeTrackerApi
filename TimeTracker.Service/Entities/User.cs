@@ -19,6 +19,10 @@ namespace TimeTracker.Service.Entities
         [NotMapped]
         public string Token { get; set; } = string.Empty;
         public string? HourlyRate { get; set; }
+        public string? WorkingHours { get; set; }
+        public bool? IsBreakIncluded { get; set; }
         public virtual Role? Role { get; set; }
+        public bool? IsDeleted { get; set; }
+        public virtual Userattendance? Userattendance { get; set; }
     }
 }

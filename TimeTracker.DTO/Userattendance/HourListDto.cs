@@ -1,32 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TimeTracker.DTO.Userattendance
+﻿namespace TimeTracker.DTO.Userattendance
 {
-    public partial class HourListDto
+    public class HourListDto
     {
-        public int Id { get; set; }
-        public string? StatusName { get; set; }
-        public DateTime? CheckoutTime { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public string? Description { get; set; }
-        public bool? ReportGenerated { get; set; }
-        public string? Duration { get; set; }
-        public string? TaskName { get; set; }
-        public string? ExtraHoursDuration { get; set; }      
-        public string? ProjectName { get; set; }   
-       public string? JobTypeName { get; set; }
-        public string? HourlyRate { get; set; }
-        public string? WorkingHours { get; set; }
-
-        public bool? IsBreakIncluded { get; set; }
-        public DateTime BreakInTime { get; set; }
-        public DateTime? BreakOutTime { get; set; }
+        public double TotalDuration { get; private set; }
+        public IList<Detail> Details { get; set; }
+        public void CalculateTotalDuration()
+        {
+            if (Details == null || Details.Count == 0)
+            {
+                TotalDuration = 0;
+                return;
+            }
+            TotalDuration = Details
+                .Where(detail => !string.IsNullOrWhiteSpace(detail.Duration))
+                .Sum(detail => double.TryParse(detail.Duration, out double duration) ? duration : 0);
+        }
+        public class Detail
+        {
+            public int Id { get; set; }
+            public string? StatusName { get; set; }
+            public DateTime? CheckoutTime { get; set; }
+            public int UserId { get; set; }
+            public DateTime? CheckingInTime { get; set; }
+            public string? Description { get; set; }
+            public bool? ReportGenerated { get; set; }
+            public string? Duration { get; set; }
+            public string? TaskName { get; set; }
+            public string? ExtraHoursDuration { get; set; }
+           
+            public string? ProjectName { get; set; }
+            public string? JobTypeName { get; set; }
+            public string? UserHourlyRate { get; set; }
+            public string? UserWorkingHours { get; set; }
+            public bool? UserIsBreakIncluded { get; set; }
+        }
     }
 }
-
-
-

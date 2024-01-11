@@ -11,13 +11,11 @@ namespace TimeTracker.Service.Services
     {
         private readonly ApplicationDbContext _context; 
         private readonly IMapper _mapper;
-
         public StatusService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-
         public async Task<IEnumerable<StatusDto>> GetAll()
         {
             var status = await _context.Status.Where(x => x.IsDeleted != true).ToListAsync();

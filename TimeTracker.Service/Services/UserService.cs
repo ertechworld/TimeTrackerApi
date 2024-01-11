@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using TimeTracker.Utility;
+using Microsoft.AspNetCore.Http;
 
 namespace TimeTracker.Service.Services
 {
@@ -16,19 +17,18 @@ namespace TimeTracker.Service.Services
         private readonly ApplicationDbContext _context;
         private readonly AppSettings _appSettings;
         private readonly IMapper _mapper;
-        public UserService(ApplicationDbContext context,IMapper mapper,IOptions<AppSettings> appSettings)
+        public UserService(ApplicationDbContext context, IMapper mapper, IOptions<AppSettings> appSettings)
         {
             _context = context;
             _mapper = mapper;
         }
-
         public DateTime Expires { get; private set; }
 
-        public async Task<UserResponseDto> Authenticate(UserRequestDto userRequestDto)
+        public async Task<UserResponseDto> Login(UserRequestDto userRequestDto)
         {
-          var result = _context.Users
-          .Include(u => u.Role) 
-          .FirstOrDefault(x => x.Password == userRequestDto.Password);
+            var result = _context.Users
+            .Include(u => u.Role)
+            .FirstOrDefault(x => x.Password == userRequestDto.Password);
             if (result == null)
             {
                 return null;
@@ -43,7 +43,7 @@ namespace TimeTracker.Service.Services
                     new Claim(ClaimTypes.Name,result.FirstName),
                     new Claim(ClaimTypes.Email,result.Email),
                     new Claim(ClaimTypes.MobilePhone,result.PhoneNumber),
-                    new Claim(ClaimTypes.Role, result.Role?.Name ?? "DefaultRole"), 
+                    new Claim(ClaimTypes.Role, result.Role?.Name ?? "DefaultRole"),
                     new Claim(ClaimTypes.Hash,result.Password)
                 }),
                 Expires = DateTime.UtcNow.AddHours(30),
@@ -53,6 +53,30 @@ namespace TimeTracker.Service.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             result.Token = tokenHandler.WriteToken(token);
             return _mapper.Map<UserResponseDto>(result);
-        }    
+        }
+
+        public async Task<bool> Logout(int userId)
+        {
+            var userAttendance = await _context.Userattendances
+                    .FirstOrDefaultAsync(x => x.UserId == userId && x.IsActive == true);
+            if (userAttendance == null)
+            {
+                return false;
+            }
+            if (userAttendance.CheckoutTime.HasValue)
+            {
+                return false;
+            }
+            userAttendance.CheckoutTime = DateTime.Now;
+            userAttendance.IsLogOut = true;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
+
+
 }
+
+    
+
