@@ -2,7 +2,7 @@
 {
     public class HourListDto
     {
-        public double TotalDuration { get; private set; }
+        public decimal TotalDuration { get; private set; }
         public IList<Detail> Details { get; set; }
         public void CalculateTotalDuration()
         {
@@ -11,9 +11,9 @@
                 TotalDuration = 0;
                 return;
             }
-            TotalDuration = Details
+            TotalDuration = (decimal)Details
                 .Where(detail => !string.IsNullOrWhiteSpace(detail.Duration))
-                .Sum(detail => double.TryParse(detail.Duration, out double duration) ? duration : 0);
+                .Sum(detail => decimal.TryParse(detail.Duration, out decimal duration) ? duration : 0);
         }
         public class Detail
         {

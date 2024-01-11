@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using TimeTracker.DTO.Break;
+
 using TimeTracker.DTO.Userattendance;
 using TimeTracker.Service.Data;
 using TimeTracker.Service.Entities;
@@ -35,7 +35,6 @@ namespace TimeTracker.Service.Services
             }
             return _mapper.Map<UserattendanceDto>(userattendance);
         }
-
         public async Task<IEnumerable<HourListDto>> GetHourListbyId(int userId, int statusId)
         {
             var userHourList = await _context.Userattendances
@@ -43,9 +42,8 @@ namespace TimeTracker.Service.Services
                 .Include(u => u.JobType)
                 .Include(u => u.Project)
                 .Include(u => u.Task)
-                .Include(u => u.User)
-                .Include(u => u.Break)
-                .Where(u => u.UserId == userId && u.StatusId == statusId)
+                .Include(u => u.User)      
+                .Where(u => u.UserId == userId)
                 .OrderBy(u => u.CreatedOn)
                 .ToListAsync();
             var hourListDto = new HourListDto
@@ -55,8 +53,6 @@ namespace TimeTracker.Service.Services
             hourListDto.CalculateTotalDuration();
             return new List<HourListDto> { hourListDto };
         }
-
     }
-
 }
 

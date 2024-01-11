@@ -28,7 +28,7 @@ builder.Services.AddScoped<IJobtypeService, JobTypeService>();
 builder.Services.AddScoped<ILeavetypeService, LeavetypeService>();
 builder.Services.AddScoped<ILeaveService, LeaveService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IBreakService, BreakService>();
+
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ISystemSettingService, SystemSettingService>();
 builder.Services.AddScoped<IValidateIpService, ValidateIpService>();
