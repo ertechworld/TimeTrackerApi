@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-
 using TimeTracker.DTO.Userattendance;
 using TimeTracker.Service.Data;
 using TimeTracker.Service.Services;
@@ -44,20 +43,16 @@ namespace TimeTrackerApp.Controllers
             {
                 return BadRequest("Request body is empty");
             }
-
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
                 return BadRequest(new { Message = "Validation failed", Errors = errors });
             }
-
             var userattendance = await _userattendanceService.Update(id, userattendanceDto);
-
             if (userattendance == null)
             {
                 return NotFound("Userattendance not found");
             }
-
             return Ok(userattendance);
         }
         [HttpGet("GetByUserIdAndWeekId")]

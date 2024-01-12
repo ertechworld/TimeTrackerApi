@@ -42,9 +42,11 @@ namespace TimeTracker.Service.DTOMapper
             CreateMap<Systemsetting, ValidateIp>();
              CreateMap<Userattendance, HourListDto.Detail>()
             .ForMember(dest => dest.CheckInDateTime, opt => opt.MapFrom(src => src.CreatedOn));
+           //CreateMap<Userattendance, HourListDto.Detail>()
+           //.ForMember(dest => dest.CheckOutDateTime, opt => opt.MapFrom(src => src.CheckoutTime));
 
 
-           
+
         }
     }
 }

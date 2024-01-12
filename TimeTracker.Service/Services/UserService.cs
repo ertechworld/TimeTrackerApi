@@ -14,8 +14,7 @@ namespace TimeTracker.Service.Services
 {
     public class UserService : IUserService
     {
-        private readonly ApplicationDbContext _context;
-     
+        private readonly ApplicationDbContext _context;    
         private readonly IMapper _mapper;
         public UserService(ApplicationDbContext context, IMapper mapper)
         {
@@ -23,7 +22,6 @@ namespace TimeTracker.Service.Services
             _mapper = mapper;
         }
         public DateTime Expires { get; private set; }
-
         public async Task<UserResponseDto> Login(UserRequestDto userRequestDto)
         {
             var result = _context.Users
@@ -54,7 +52,6 @@ namespace TimeTracker.Service.Services
             result.Token = tokenHandler.WriteToken(token);
             return _mapper.Map<UserResponseDto>(result);
         }
-
         public async Task<bool> Logout(int userId)
         {
             var userAttendance = await _context.Userattendances
@@ -72,10 +69,7 @@ namespace TimeTracker.Service.Services
             await _context.SaveChangesAsync();
             return true;
         }
-
     }
-
-
 }
 
     

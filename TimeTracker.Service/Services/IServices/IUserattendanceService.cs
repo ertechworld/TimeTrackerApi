@@ -16,10 +16,5 @@ namespace TimeTracker.Service.Services.IServices
         Task<UserattendanceDto> Add(UserattendanceDto userattendanceDto);
         Task<UserattendanceDto> Update(int id, UserattendanceDto userattendanceDto);
         Task<IEnumerable<HourListDto>> GetByUserIdAndWeekId(int userId, int weekId, int year);
-
-
-
-
-
     }
 }

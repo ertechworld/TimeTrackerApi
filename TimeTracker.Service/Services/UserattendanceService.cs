@@ -38,13 +38,8 @@ namespace TimeTracker.Service.Services
 
         public async Task<IEnumerable<HourListDto>> GetByUserIdAndWeekId(int userId, int weekId, int year)
         {
-            IQueryable<Userattendance> query = _context.Userattendances
-                .Include(u => u.Status)
-                .Include(u => u.JobType)
-                .Include(u => u.Project)
-                .Include(u => u.Task)
-                .Include(u => u.User);
-
+            IQueryable<Userattendance> query = _context.Userattendances;
+               
             query = query.Where(u => u.UserId == userId);
 
             if (weekId > 0)
