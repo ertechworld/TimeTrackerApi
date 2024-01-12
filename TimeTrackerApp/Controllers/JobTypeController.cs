@@ -23,6 +23,5 @@ namespace TimeTrackerApp.Controllers
                 var jobtypes = await _jobtypeService.GetAll();
                 return Ok(jobtypes);          
         }
-
     }
 }

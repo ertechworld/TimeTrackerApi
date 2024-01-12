@@ -20,6 +20,6 @@ namespace TimeTracker.DTO.Userattendance
 
         public int? ProjectId { get; set; } 
         public int? JobTypeId { get; set; } 
-        public StatusDto Status { get; set; }
+       // public Status Status { get; set; }
     }
 }

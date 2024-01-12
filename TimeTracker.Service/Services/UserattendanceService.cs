@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-
+using System.Globalization;
 using TimeTracker.DTO.Userattendance;
 using TimeTracker.Service.Data;
 using TimeTracker.Service.Entities;
@@ -36,27 +36,91 @@ namespace TimeTracker.Service.Services
             return _mapper.Map<UserattendanceDto>(userattendance);
         }
 
-        public async Task<IEnumerable<HourListDto>> GetHourListbyId(int userId, int statusId)
+        public async Task<IEnumerable<HourListDto>> GetByUserIdAndWeekId(int userId, int weekId)
         {
-            var userHourList = await _context.Userattendances
+            IQueryable<Userattendance> query = _context.Userattendances
                 .Include(u => u.Status)
                 .Include(u => u.JobType)
                 .Include(u => u.Project)
                 .Include(u => u.Task)
-                .Include(u => u.User)
+                .Include(u => u.User);
 
-                .Where(u => u.UserId == userId && (statusId == null || u.StatusId == statusId))
-                .OrderBy(u => u.CreatedOn)
-              .ToListAsync();
-            var hourListDto = new HourListDto
+            query = query.Where(u => u.UserId == userId);
+
+            if (weekId > 0)
             {
-                Details = _mapper.Map<List<HourListDto.Detail>>(userHourList),
+                // Filter partially in the database
+                query = query.Where(u => u.CreatedOn.HasValue);
+
+                // Fetch the data from the database
+                var userHourList = await query.OrderBy(u => u.CreatedOn).ToListAsync();
+
+                // Finish filtering in-memory using GetWeekInfo
+                userHourList = userHourList
+                    .Where(u => GetWeekInfo(u.CreatedOn).WeekId == weekId)
+                    .ToList();
+
+                // Continue with your mapping and calculations
+                var hourListDto = new HourListDto
+                {
+                    Details = _mapper.Map<List<HourListDto.Detail>>(userHourList),
+                };
+
+                // Get WeekInfo based on the CheckingInTime of the first entry
+                var weekInfo = GetWeekInfo(userHourList.FirstOrDefault()?.CreatedOn);
+
+                // Set WeekId and WeekStart/WeekEnd in each Detail object
+                foreach (var detail in hourListDto.Details)
+                {
+                    detail.WeekId = weekInfo.WeekId;
+                    detail.WeekStart = weekInfo.StartTime;
+                    detail.WeekEnd = weekInfo.EndTime;
+                }
+
+                // Filter out entries from different years
+                int targetYear = weekInfo.StartTime.Year;
+                hourListDto.Details = hourListDto.Details
+                    .Where(detail => detail.CheckingInTime?.Year == targetYear)
+                    .ToList();
+
+                hourListDto.CalculateTotalDuration();
+
+                return new List<HourListDto> { hourListDto };
+            }
+
+            // Continue without weekId filtering
+            var userHourListWithoutWeekFilter = await query.OrderBy(u => u.CreatedOn).ToListAsync();
+            var hourListDtoWithoutWeekFilter = new HourListDto
+            {
+                Details = _mapper.Map<List<HourListDto.Detail>>(userHourListWithoutWeekFilter),
             };
-            hourListDto.CalculateTotalDuration();
-            return new List<HourListDto> { hourListDto };
+
+            // Calculate total duration, set WeekId, WeekStart, and WeekEnd (if needed)
+
+            return new List<HourListDto> { hourListDtoWithoutWeekFilter };
         }
 
-    }
 
+
+        private (int WeekId, DateTime StartTime, DateTime EndTime) GetWeekInfo(DateTime? date)
+        {
+            if (date.HasValue)
+            {
+                DateTimeFormatInfo dfi = DateTimeFormatInfo.CurrentInfo;
+                Calendar cal = dfi.Calendar;
+                DateTime startOfWeek = date.Value.Date.AddDays(-(int)date.Value.DayOfWeek);
+                DateTime endOfWeek = startOfWeek.AddDays(6).AddHours(23).AddMinutes(59).AddSeconds(59);
+                int weekId = cal.GetWeekOfYear(date.Value, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+                return (weekId, startOfWeek, endOfWeek);
+            }
+            return (0, DateTime.MinValue, DateTime.MinValue); // Default values if date is null
+        }
+
+
+    }
 }
+
+
+
+
 

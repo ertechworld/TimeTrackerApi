@@ -14,7 +14,7 @@ namespace TimeTracker.Service.Services.IServices
     public interface IChangejobService
     {
       
-        Task<bool> Update(int id, ChangejobDto changejobUpdateDto);
+        Task<bool> Update(int id, ChangejobDto changejobDto);
 
       
     }

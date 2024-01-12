@@ -18,63 +18,40 @@ namespace TimeTracker.Service.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-
         public ChangejobService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-        public async Task<bool> Update(int id, ChangejobDto changejobUpdateDto)
+        public async Task<bool> Update(int id, ChangejobDto changejobDto)
         {
-            try
-            {
                 var changejob = await _context.Userattendances
                     .Include(c => c.Task)
                     .Include(c => c.Project)
                     .Include(c => c.JobType)
                     .FirstOrDefaultAsync(c => c.Id == id);
-
                 if (changejob == null)
                 {
                     return false;
-                }
-
-                // Update only the properties that are not null in the ChangejobUpdateDto
-                if (changejobUpdateDto.Description != null)
+                }    
+                if (changejobDto.Description != null)
                 {
-                    changejob.Description = changejobUpdateDto.Description;
+                    changejob.Description = changejobDto.Description;
                 }
-
-                if (changejobUpdateDto.TaskId != null)
+                if (changejobDto.TaskId != null)
                 {
-                    changejob.TaskId = changejobUpdateDto.TaskId;
+                    changejob.TaskId = changejobDto.TaskId;
                 }
-
-              
-
-                if (changejobUpdateDto.ProjectId != null)
+                if (changejobDto.ProjectId != null)
                 {
-                    changejob.ProjectId = changejobUpdateDto.ProjectId;
+                    changejob.ProjectId = changejobDto.ProjectId;
                 }
-
-                
-
-                if (changejobUpdateDto.JobTypeId != null)
+                if (changejobDto.JobTypeId != null)
                 {
-                    changejob.JobTypeId = changejobUpdateDto.JobTypeId;
+                    changejob.JobTypeId = changejobDto.JobTypeId;
                 }
-
-               
-
                 await _context.SaveChangesAsync();
                 return true;
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it according to your needs
-                return false;
-            }
         }
-
     }
 }

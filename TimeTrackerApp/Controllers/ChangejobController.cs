@@ -7,37 +7,28 @@ using TimeTracker.Service.Services.IServices;
 namespace TimeTrackerApp.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-   
+    [Route("api/[controller]")] 
     public class ChangejobController : ControllerBase
     {
         private readonly IChangejobService _changejobService;
-
         public ChangejobController(IChangejobService changejobService)
         {
             _changejobService = changejobService;
         }
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ChangejobDto changejobUpdateDto)
+        public async Task<IActionResult> Update(int id, [FromBody] ChangejobDto changejobDto)
         {
-            if (changejobUpdateDto == null)
+            if (changejobDto == null)
             {
                 return BadRequest(false);
             }
-
-            var success = await _changejobService.Update(id, changejobUpdateDto);
-
+            var success = await _changejobService.Update(id, changejobDto);
             if (!success)
             {
                 return NotFound();
             }
-
             return NoContent();
         }
-
-    }
-
-        
+    }    
  }
 

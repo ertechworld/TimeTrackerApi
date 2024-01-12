@@ -20,7 +20,7 @@ namespace TimeTrackerApp.Controllers
         }
        
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAll1([FromQuery] string? querySearch)
+        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAll([FromQuery] string? querySearch)
         {
             try
             {

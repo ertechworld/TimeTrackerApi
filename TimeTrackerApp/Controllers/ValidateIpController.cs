@@ -10,12 +10,10 @@ namespace TimeTrackerApp.Controllers
     public class ValidateIpController : ControllerBase
     {
         private readonly IValidateIpService _validateIpService;
-
         public ValidateIpController(IValidateIpService validateIpService)
         {
             _validateIpService = validateIpService;
         }
-
         [HttpGet("ValidateIpAddress")]
         public async Task<IActionResult> ValidateIpAddressAsync([FromQuery] string ipAddress)
         {

@@ -14,7 +14,6 @@ namespace TimeTrackerApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
     public class UserAttendanceController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -61,14 +60,12 @@ namespace TimeTrackerApp.Controllers
 
             return Ok(userattendance);
         }
-       
-
-        [HttpGet("GetHourListbyId")]
-        public async Task<IActionResult> GetHourListbyId([FromQuery] int userId, [FromQuery] int statusId)
+        [HttpGet("GetByUserIdAndWeekId")]
+        public async Task<IActionResult> GetByUserIdAndWeekId([FromQuery] int userId, [FromQuery] int weekId)
         {
             try
             {
-                var hourList = await _userattendanceService.GetHourListbyId(userId, statusId);
+                var hourList = await _userattendanceService.GetByUserIdAndWeekId(userId, weekId);
                 return Ok(hourList);
             }
             catch (Exception ex)

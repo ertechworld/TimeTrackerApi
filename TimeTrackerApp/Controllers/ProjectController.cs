@@ -10,8 +10,6 @@ namespace TimeTrackerApp.Controllers
    [ApiController]
    [Authorize]
     [Authorize(Roles = "Admin,Leiðari")]
-
-
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _projectService;
@@ -61,8 +59,6 @@ namespace TimeTrackerApp.Controllers
                     return StatusCode(500, "Failed to add project");
               }    
         }
-
-
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] ProjectRequestDto projectUpdateDto)
         {

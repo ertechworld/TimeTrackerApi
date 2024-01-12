@@ -38,7 +38,6 @@ namespace TimeTrackerApp.Controllers
             {
                 return NotFound("SystemSetting not found");
             }
-
             return Ok(systemSetting);
         }
 
@@ -49,20 +48,16 @@ namespace TimeTrackerApp.Controllers
             {
                 return BadRequest("Request body is empty");
             }
-
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
                 return BadRequest(new { Message = "Validation failed", Errors = errors });
             }
-
             var addedSystemSetting = await _systemSettingService.Add(systemSettingRequestDto);
-
             if (addedSystemSetting == null)
             {
                 return StatusCode(500, "Failed to add system setting");
             }
-
             return Ok(addedSystemSetting);
         }
 
@@ -73,23 +68,18 @@ namespace TimeTrackerApp.Controllers
             {
                 return BadRequest("Request body is empty");
             }
-
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
                 return BadRequest(new { Message = "Validation failed", Errors = errors });
             }
-
             var updatedSystemSetting = await _systemSettingService.Update(id, systemSettingUpdateDto);
-
             if (updatedSystemSetting == null)
             {
                 return NotFound("SystemSetting not found");
             }
-
             return Ok(updatedSystemSetting);
         }
-
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
@@ -97,7 +87,6 @@ namespace TimeTrackerApp.Controllers
             {
                 return BadRequest("Invalid id");
             }
-
             await _systemSettingService.Delete(id);
             return Ok(true);
         }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 using TimeTracker.DTO.Task;
 using TimeTracker.Service.Services;
 using TimeTracker.Service.Services.IServices;
@@ -11,7 +10,6 @@ namespace TimeTrackerApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
     public class TaskController : ControllerBase
     {
         private readonly ITaskService _taskService;
@@ -52,8 +50,6 @@ namespace TimeTrackerApp.Controllers
               await _taskService.Add(taskDto);
               return Ok(new { Success = true });   
         }
-
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] TaskRequestDto taskDto)
         {

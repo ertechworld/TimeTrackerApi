@@ -22,14 +22,14 @@ namespace TimeTrackerApp.Controllers
         }
 
         [HttpPost]
-        [Route("authenticate")]
+        [Route("Login")]
         public async Task<IActionResult> Login([FromBody] UserRequestDto userRequestDto)
         {
             var user = await _userService.Login(userRequestDto);
             if (user == null) { return NotFound(); }
             return Ok(user);
         }
-        [HttpPost("logout/{userId}")]
+        [HttpPost("Logout/{userId}")]
         public async Task<IActionResult> Logout(int userId)
         {
             var result = await _userService.Logout(userId);
