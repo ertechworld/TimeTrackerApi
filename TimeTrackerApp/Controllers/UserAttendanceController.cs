@@ -16,12 +16,12 @@ namespace TimeTrackerApp.Controllers
     [ApiController]
     public class UserAttendanceController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+      
         private readonly IUserattendanceService _userattendanceService;
-        public UserAttendanceController(IUserattendanceService userattendanceService, IMapper mapper, ApplicationDbContext context)
+        public UserAttendanceController(IUserattendanceService userattendanceService)
         {
             _userattendanceService = userattendanceService;
-            _context=context;
+           
         }
         [HttpPost("Add")]
         public async Task<IActionResult> AddAsync([FromBody] UserattendanceDto userattendanceDto)
