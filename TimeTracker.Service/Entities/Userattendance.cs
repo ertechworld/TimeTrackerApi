@@ -27,8 +27,6 @@ namespace TimeTracker.Service.Entities
         public  Project? Project { get; set; }
         public  Status? Status { get; set; }
         public Task? Task { get; set; }
-        public  User? User { get; set; }
-      
+        public  User? User { get; set; }    
     }
-
 }

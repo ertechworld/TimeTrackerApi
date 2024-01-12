@@ -38,10 +38,13 @@ namespace TimeTracker.Service.DTOMapper
             CreateMap<User, EmployeeDto>().ReverseMap();
             CreateMap<Staffstatus, StaffStatusDto>().ReverseMap();
             CreateMap<Systemsetting, SystemSettingDto>().ReverseMap();
+            CreateMap<Userattendance, ChangejobDto>().ReverseMap();
             CreateMap<Systemsetting, ValidateIp>();
              CreateMap<Userattendance, HourListDto.Detail>()
-            .ForMember(dest => dest.CheckInTime, opt => opt.MapFrom(src => src.CreatedOn));
-            CreateMap<Userattendance, ChangejobDto>().ReverseMap();
+            .ForMember(dest => dest.CheckInDateTime, opt => opt.MapFrom(src => src.CreatedOn));
+
+
+           
         }
     }
 }

@@ -8,7 +8,7 @@ using TimeTracker.Service.Services;
 using TimeTracker.Service.Services.IServices;
 using TimeTrackerApp;
 using Microsoft.IdentityModel.Tokens;
-using TimeTracker.Utility;
+
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -47,9 +47,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //JWT
 var appSettingSection = builder.Configuration.GetSection("AppSettings");
-builder.Services.Configure<AppSettings>(appSettingSection);
 
-var appSetting = appSettingSection.Get<AppSettings>();
+
+
 var key = System.Text.Encoding.ASCII.GetBytes("thisismysecrettoken");
 builder.Services.AddAuthentication(x =>
 {

@@ -61,19 +61,18 @@ namespace TimeTrackerApp.Controllers
             return Ok(userattendance);
         }
         [HttpGet("GetByUserIdAndWeekId")]
-        public async Task<IActionResult> GetByUserIdAndWeekId([FromQuery] int userId, [FromQuery] int weekId)
+        public async Task<ActionResult<IEnumerable<HourListDto>>> GetByUserIdAndWeekId([FromQuery] int userId, [FromQuery] int weekId, [FromQuery] int year)
         {
             try
             {
-                var hourList = await _userattendanceService.GetByUserIdAndWeekId(userId, weekId);
-                return Ok(hourList);
+                var result = await _userattendanceService.GetByUserIdAndWeekId(userId, weekId, year);
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
     }
 }
 

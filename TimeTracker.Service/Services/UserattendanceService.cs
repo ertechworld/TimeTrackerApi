@@ -36,7 +36,7 @@ namespace TimeTracker.Service.Services
             return _mapper.Map<UserattendanceDto>(userattendance);
         }
 
-        public async Task<IEnumerable<HourListDto>> GetByUserIdAndWeekId(int userId, int weekId)
+        public async Task<IEnumerable<HourListDto>> GetByUserIdAndWeekId(int userId, int weekId, int year)
         {
             IQueryable<Userattendance> query = _context.Userattendances
                 .Include(u => u.Status)
@@ -44,44 +44,54 @@ namespace TimeTracker.Service.Services
                 .Include(u => u.Project)
                 .Include(u => u.Task)
                 .Include(u => u.User);
+
             query = query.Where(u => u.UserId == userId);
+
             if (weekId > 0)
-            {  
-                query = query.Where(u => u.CreatedOn.HasValue);  
+            {
+                query = query.Where(u => u.CreatedOn.HasValue);
                 var userHourList = await query.OrderBy(u => u.CreatedOn).ToListAsync();
                 userHourList = userHourList
-                    .Where(u => GetWeekInfo(u.CreatedOn).WeekId == weekId)
+                    .Where(u => GetWeekInfo(u.CreatedOn).WeekId == weekId && GetWeekInfo(u.CreatedOn).StartTime.Year == year)
                     .ToList();
+
                 var hourListDto = new HourListDto
                 {
                     Details = _mapper.Map<List<HourListDto.Detail>>(userHourList),
                 };
 
-                // Get WeekInfo based on the CheckingInTime of the first entry
                 var weekInfo = GetWeekInfo(userHourList.FirstOrDefault()?.CreatedOn);
 
-                // Set WeekId and WeekStart/WeekEnd in each Detail object
-                foreach (var detail in hourListDto.Details)
-                {
-                    detail.WeekId = weekInfo.WeekId;
-                    detail.WeekStart = weekInfo.StartTime;
-                    detail.WeekEnd = weekInfo.EndTime;
-                }
+              
                 int targetYear = weekInfo.StartTime.Year;
+
                 hourListDto.Details = hourListDto.Details
-                    .Where(detail => detail.CheckInTime?.Year == targetYear)
+                    .Where(detail => detail.CheckInDateTime?.Year == targetYear)
                     .ToList();
+
                 hourListDto.CalculateTotalDuration();
+
                 return new List<HourListDto> { hourListDto };
             }
+
             // Continue without weekId filtering
             var userHourListWithoutWeekFilter = await query.OrderBy(u => u.CreatedOn).ToListAsync();
+
             var hourListDtoWithoutWeekFilter = new HourListDto
             {
                 Details = _mapper.Map<List<HourListDto.Detail>>(userHourListWithoutWeekFilter),
             };
+
+            // Filter by year
+            hourListDtoWithoutWeekFilter.Details = hourListDtoWithoutWeekFilter.Details
+                .Where(detail => detail.CheckInDateTime?.Year == year)
+                .ToList();
+
+            hourListDtoWithoutWeekFilter.CalculateTotalDuration();
+
             return new List<HourListDto> { hourListDtoWithoutWeekFilter };
         }
+
         private (int WeekId, DateTime StartTime, DateTime EndTime) GetWeekInfo(DateTime? date)
         {
             if (date.HasValue)

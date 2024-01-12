@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
-using TimeTracker.Utility;
+
 using Microsoft.AspNetCore.Http;
 
 namespace TimeTracker.Service.Services
@@ -15,9 +15,9 @@ namespace TimeTracker.Service.Services
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
-        private readonly AppSettings _appSettings;
+     
         private readonly IMapper _mapper;
-        public UserService(ApplicationDbContext context, IMapper mapper, IOptions<AppSettings> appSettings)
+        public UserService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
