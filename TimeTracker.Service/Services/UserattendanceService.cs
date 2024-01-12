@@ -44,23 +44,14 @@ namespace TimeTracker.Service.Services
                 .Include(u => u.Project)
                 .Include(u => u.Task)
                 .Include(u => u.User);
-
             query = query.Where(u => u.UserId == userId);
-
             if (weekId > 0)
-            {
-                // Filter partially in the database
-                query = query.Where(u => u.CreatedOn.HasValue);
-
-                // Fetch the data from the database
+            {  
+                query = query.Where(u => u.CreatedOn.HasValue);  
                 var userHourList = await query.OrderBy(u => u.CreatedOn).ToListAsync();
-
-                // Finish filtering in-memory using GetWeekInfo
                 userHourList = userHourList
                     .Where(u => GetWeekInfo(u.CreatedOn).WeekId == weekId)
                     .ToList();
-
-                // Continue with your mapping and calculations
                 var hourListDto = new HourListDto
                 {
                     Details = _mapper.Map<List<HourListDto.Detail>>(userHourList),
@@ -76,32 +67,21 @@ namespace TimeTracker.Service.Services
                     detail.WeekStart = weekInfo.StartTime;
                     detail.WeekEnd = weekInfo.EndTime;
                 }
-
-                // Filter out entries from different years
                 int targetYear = weekInfo.StartTime.Year;
                 hourListDto.Details = hourListDto.Details
-                    .Where(detail => detail.CheckingInTime?.Year == targetYear)
+                    .Where(detail => detail.CheckInTime?.Year == targetYear)
                     .ToList();
-
                 hourListDto.CalculateTotalDuration();
-
                 return new List<HourListDto> { hourListDto };
             }
-
             // Continue without weekId filtering
             var userHourListWithoutWeekFilter = await query.OrderBy(u => u.CreatedOn).ToListAsync();
             var hourListDtoWithoutWeekFilter = new HourListDto
             {
                 Details = _mapper.Map<List<HourListDto.Detail>>(userHourListWithoutWeekFilter),
             };
-
-            // Calculate total duration, set WeekId, WeekStart, and WeekEnd (if needed)
-
             return new List<HourListDto> { hourListDtoWithoutWeekFilter };
         }
-
-
-
         private (int WeekId, DateTime StartTime, DateTime EndTime) GetWeekInfo(DateTime? date)
         {
             if (date.HasValue)

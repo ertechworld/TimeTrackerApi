@@ -21,7 +21,7 @@
             public string? StatusName { get; set; }
             public DateTime? CheckoutTime { get; set; }
             public int UserId { get; set; }
-            public DateTime? CheckingInTime { get; set; }
+            public DateTime? CheckInTime { get; set; }
             public string? Description { get; set; }
             public bool? ReportGenerated { get; set; }
             public string? Duration { get; set; }
