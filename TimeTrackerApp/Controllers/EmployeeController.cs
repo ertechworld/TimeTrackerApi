@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TimeTracker.DTO.Employee;
+
 using TimeTracker.DTO.User;
 using TimeTracker.Service.Entities;
 using TimeTracker.Service.Services;
@@ -23,16 +23,19 @@ namespace TimeTrackerApp.Controllers
        
        
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+      
+        public async Task<IActionResult> GetAllUsers(string? querySearch)
         {
-            var users = await _employeeService.GetAll();
-
-            if (users == null || !users.Any())
+            try
             {
-                return NoContent();
+                var userDtos = await _employeeService.GetAllUsers(querySearch);
+                return Ok(userDtos);
             }
-
-            return Ok(users);
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
     }

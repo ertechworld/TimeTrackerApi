@@ -22,17 +22,25 @@ namespace TimeTracker.Service.Services
             _context = context;
             _mapper = mapper;
         }
-       
-       
-        public async Task<IEnumerable<UserDto>> GetAll()
+
+
+        public async Task<IEnumerable<UserDto>> GetAllUsers(string? querySearch)
         {
             var users = await _context.Users
                 .Include(user => user.UserAttendances)
                     .ThenInclude(userAttendance => userAttendance.Status)
+                .Where(user =>
+                    (string.IsNullOrEmpty(querySearch) ||
+                     user.FirstName.Contains(querySearch) ||
+                     user.LastName.Contains(querySearch) ||
+                     user.Email.Contains(querySearch))
+                )
                 .ToListAsync();
+
             var distinctUsers = users.Distinct().ToList();
             return distinctUsers.Select(user => _mapper.Map<User, UserDto>(user));
         }
+
 
     }
 

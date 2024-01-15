@@ -60,6 +60,6 @@ namespace TimeTracker.Service.Entities
 
         public int? CreatedBy { get; set; }
 
-        public virtual Userattendance? Userattendance { get;set; }
+        public virtual Userattendance? UserAttendances { get;set; }
     }
 }
