@@ -25,7 +25,7 @@ namespace TimeTracker.Service.Services
         }
         public async Task<bool> Update(int id, ChangejobDto changejobDto)
         {
-                var changejob = await _context.Userattendances
+                var changejob = await _context.UserAttendances
                     .Include(c => c.Task)
                     .Include(c => c.Project)
                     .Include(c => c.JobType)

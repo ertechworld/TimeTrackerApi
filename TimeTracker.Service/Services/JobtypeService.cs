@@ -20,7 +20,7 @@ namespace TimeTracker.Service.Services
 
         public async Task<IEnumerable<JobtypeDto>> GetAll()
         {
-            var jobtypes = await _context.Jobtypes.ToListAsync();
+            var jobtypes = await _context.JobTypes.ToListAsync();
             return jobtypes.Select(jobtype => _mapper.Map<Jobtype, JobtypeDto>(jobtype));
         }
 

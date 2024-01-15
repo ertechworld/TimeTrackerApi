@@ -54,7 +54,7 @@ namespace TimeTracker.Service.Services
         }
         public async Task<bool> Logout(int userId)
         {
-            var userAttendance = await _context.Userattendances
+            var userAttendance = await _context.UserAttendances
                     .FirstOrDefaultAsync(x => x.UserId == userId && x.IsActive == true);
             if (userAttendance == null)
             {

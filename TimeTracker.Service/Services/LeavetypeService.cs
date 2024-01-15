@@ -20,7 +20,7 @@ namespace TimeTracker.Service.Services
 
         public async Task<IEnumerable<LeavetypeDto>> GetAll()
         {
-            var leavetypes = await _context.Leavetypes.ToListAsync();
+            var leavetypes = await _context.LeaveTypes.ToListAsync();
             return leavetypes.Select(leavetype => _mapper.Map<Leavetype, LeavetypeDto>(leavetype));
         }
 

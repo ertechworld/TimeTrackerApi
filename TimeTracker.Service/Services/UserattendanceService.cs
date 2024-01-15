@@ -20,14 +20,14 @@ namespace TimeTracker.Service.Services
         public async Task<UserattendanceDto> Add(UserattendanceDto userattendanceDto)
         {
             var userattendance = _mapper.Map<Userattendance>(userattendanceDto);
-            await _context.Userattendances.AddAsync(userattendance);
+            await _context.UserAttendances.AddAsync(userattendance);
             await _context.SaveChangesAsync();
             return _mapper.Map<UserattendanceDto>(userattendance);
         }
 
         public async Task<UserattendanceDto> Update(int id, UserattendanceDto userattendanceDto)
         {
-            var userattendance = await _context.Userattendances.FindAsync(id);
+            var userattendance = await _context.UserAttendances.FindAsync(id);
             if (userattendance != null)
             {
                 _mapper.Map(userattendanceDto, userattendance);
@@ -35,10 +35,9 @@ namespace TimeTracker.Service.Services
             }
             return _mapper.Map<UserattendanceDto>(userattendance);
         }
-
         public async Task<IEnumerable<HourListDto>> GetByUserIdAndWeekId(int userId, int weekId, int year)
         {
-            IQueryable<Userattendance> query = _context.Userattendances;
+            IQueryable<Userattendance> query = _context.UserAttendances;
                
             query = query.Where(u => u.UserId == userId);
 
