@@ -15,12 +15,13 @@ namespace TimeTracker.DTO.Userattendance
         public int UserId { get; set; }
         public string? Duration { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public int TaskId { get; set; }
         public DateTime? CheckoutTime { get; set; }
         public DateTime? CreatedOn { get; set; }
-
+        public bool IsActive{get; set;}=true;
+        public bool ReportGenerated { get; set; } = false;
         public int? ProjectId { get; set; } 
         public int? JobTypeId { get; set; } 
        // public Status Status { get; set; }
