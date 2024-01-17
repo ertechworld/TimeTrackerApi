@@ -23,6 +23,6 @@ namespace TimeTracker.Service.Entities
         public bool? IsBreakIncluded { get; set; }
         public virtual Role? Role { get; set; }
         public bool? IsDeleted { get; set; }
-        public virtual Userattendance? Userattendance { get; set; }
+        public virtual Userattendance? UserAttendances { get; set; }
     }
 }
